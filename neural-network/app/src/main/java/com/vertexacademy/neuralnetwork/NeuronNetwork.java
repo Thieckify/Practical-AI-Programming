@@ -11,12 +11,12 @@ public class NeuronNetwork {
     //
 
     // Layers un tableau dynamique de couche de neurones chainees.
-    private List<NeuronLayer> layers = new ArrayList<>();
+    protected  List<NeuronLayer> layers = new ArrayList<>();
 
     // variable d'instance errors et precisions seront utiles pour suivre 
     // l'évolution des erreurs au cours de la phase d'apprentissage
-    private double[] errors;
-    private double[] precisions;
+    protected  double[] errors;
+    protected  double[] precisions;
 
 
     //

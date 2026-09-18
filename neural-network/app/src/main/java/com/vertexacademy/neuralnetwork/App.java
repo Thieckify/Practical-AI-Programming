@@ -29,7 +29,8 @@ public class App {
 
         //testNeuron();
         //testSigmoidNeuron();
-        testNeuronLayer();
+        //testNeuronLayer();
+        testDigitalComparatorLearning();
     }
 
     /*
@@ -151,6 +152,63 @@ public class App {
 
         System.out.println("\nEtat final :");
         afficherEtatCouche(layer, inputs, desiredOutputs, nbEpochs);
+    }
+
+    private static void testDigitalComparatorLearning() {
+        System.out.println("=== Apprentissage du comparateur digital ===\n");
+
+        BackpropagationNetwork network = new BackpropagationNetwork();
+        network.configure(1, 8, 2, 3);
+        network.setLearningRate(0.5);
+
+        double[][] inputs = {
+            {0.0, 0.0},
+            {0.0, 1.0},
+            {1.0, 0.0},
+            {1.0, 1.0}
+        };
+
+        double[][] desired = {
+            {0.0, 1.0, 0.0},
+            {0.0, 0.0, 1.0},
+            {1.0, 0.0, 0.0},
+            {0.0, 1.0, 0.0}
+        };
+
+        int epochs = 6000;
+        for (int epoch = 1; epoch <= epochs; epoch++) {
+            for (int i = 0; i < inputs.length; i++) {
+                network.train(inputs[i], desired[i]);
+            }
+
+            if (epoch == 1 || epoch == 10 || epoch == 100 || epoch == 1000 || epoch == epochs) {
+                System.out.printf("Epoch %d | erreur moyenne = %.6f%n", epoch, computeMeanError(network, inputs, desired));
+            }
+        }
+
+        System.out.println();
+        System.out.println("Sorties finales apres apprentissage :");
+        for (int i = 0; i < inputs.length; i++) {
+            int[] result = network.feed(inputs[i]);
+            System.out.printf("A=%.0f, B=%.0f -> [A>B, A=B, A<B] = [%d, %d, %d]%n",
+                    inputs[i][0], inputs[i][1], result[0], result[1], result[2]);
+        }
+
+        System.out.println();
+        System.out.println("Le reseau apprend les 4 cas du comparateur numerique avec des couches cachees entrainables.");
+    }
+
+    private static double computeMeanError(BackpropagationNetwork network, double[][] inputs, double[][] desiredOutputs) {
+        double total = 0.0;
+
+        for (int i = 0; i < inputs.length; i++) {
+            int[] predicted = network.feed(inputs[i]);
+            for (int j = 0; j < desiredOutputs[i].length; j++) {
+                total += Math.abs(desiredOutputs[i][j] - predicted[j]);
+            }
+        }
+
+        return total / (inputs.length * desiredOutputs[0].length);
     }
 
 

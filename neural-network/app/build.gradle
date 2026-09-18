@@ -32,7 +32,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'com.vertexacademy.neuralnetwork.NeuronNetwork'
+    mainClass = 'com.vertexacademy.neuralnetwork.App'
 }
 
 
